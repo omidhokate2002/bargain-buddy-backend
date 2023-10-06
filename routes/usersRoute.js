@@ -1,7 +1,8 @@
 import express from "express";
-import User from "../modules/userModel.js";
+import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -53,7 +54,9 @@ router.post("/login", async (req, res) => {
     }
 
     // Create and assign a token
-    const token = jwt.sign({ userId: user._id }, process.env.jwt_secret);
+    const token = jwt.sign({ userId: user._id }, process.env.jwt_secret, {
+      expiresIn: "1d",
+    });
     // Send Response
     res.send({
       success: true,
@@ -61,6 +64,23 @@ router.post("/login", async (req, res) => {
       data: token,
     });
   } catch (error) {
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
+// Get Current User
+router.get("/get-current-user", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.body.userId);
+    res.send({
+      success: true,
+      message: "User fetched successfully",
+      data: user,
+    });
+  } catch {
     res.send({
       success: false,
       message: error.message,
