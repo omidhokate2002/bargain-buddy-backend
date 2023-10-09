@@ -80,7 +80,7 @@ router.get("/get-current-user", authMiddleware, async (req, res) => {
       message: "User fetched successfully",
       data: user,
     });
-  } catch {
+  } catch (error) {
     res.send({
       success: false,
       message: error.message,
