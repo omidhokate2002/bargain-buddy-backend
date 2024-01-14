@@ -46,6 +46,10 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    showBidsOnProductPage: {
+      type: Boolean,
+      default: false,
+    },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "users",
@@ -53,12 +57,11 @@ const productSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+      default: "pending",
       required: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-export default mongoose.model("Product", productSchema);
+export default mongoose.model("products", productSchema);
